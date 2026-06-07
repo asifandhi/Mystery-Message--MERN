@@ -81,7 +81,7 @@ export const replyToMessage = asyncHandler(async (req, res) => {
 });
 
 // GET /api/messages/thread/:threadToken  (public — sender uses this)
-export const getThread = asyncHandler(async (req, res) => {
+export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
   const { threadToken } = req.params;
 
   const user = await User.findOne({ "messages.threadToken": threadToken });
