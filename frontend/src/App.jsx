@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser, logout } from './store/authSlice'
-import { getMe } from './api/user.api' 
-import { Header, Footer } from './components'
+import { getMe } from './api/user.api.js' 
+import Header from './components/header/Header.jsx'
+import Footer from './components/footer/Footer.jsx'
 import { Outlet } from 'react-router-dom'
 
 function App() {
