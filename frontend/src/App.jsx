@@ -1,7 +1,7 @@
 import { useState,useEffect } from 'react'
 import './App.css'
 import { useSelector } from 'react-redux'
-import { toggleTheme } from '../store/themeSlice';
+import { toggleTheme } from './store/themeSlice';
 import { Outlet } from 'react-router-dom';
 import { Header,Footer } from '../components';
 

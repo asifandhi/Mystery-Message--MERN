@@ -12,7 +12,7 @@ const router = Router();
 
 // public
 router.route("/send/:username").post(sendMessage);
-router.route("/thread").get(checkMsgReplyThroughThread); // ✅ POST because body
+router.route("/thread/:threadToken").get(checkMsgReplyThroughThread); // ✅ POST because body
 
 // protected
 router.route("/").get(verifyJWT, getMessages);
