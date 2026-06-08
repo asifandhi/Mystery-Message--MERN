@@ -65,14 +65,7 @@ const router = createBrowserRouter([
         path: '/thread/:threadToken',
         element: <ThreadCheck />,
       },
-      {
-        path: '*',
-        element: (
-          <div className='flex items-center justify-center min-h-screen text-gray-400 dark:text-gray-600'>
-            404 — Page not found
-          </div>
-        ),
-      },
+      
     ],
   },
 ])

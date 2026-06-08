@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUser, logout } from './store/authSlice'
+import { login, logout } from './store/authSlice'
 import { getMe } from './api/user.api.js' 
 import Header from './components/header/Header.jsx'
 import Footer from './components/footer/Footer.jsx'
@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     getMe()
-      .then((res) => dispatch(setUser(res.data.data)))
+      .then((res) => dispatch(login(res.data.data)))
       .catch(() => dispatch(logout()))
       .finally(() => setLoading(false))
   }, [])
