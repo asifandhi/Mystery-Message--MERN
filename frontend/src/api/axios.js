@@ -1,6 +1,5 @@
 import axios from "axios";
-import conf from "../src/conf/conf.js";
-
+import conf from "../conf/conf";
 const api = axios.create({
   baseURL: conf.apiBaseUrl,
   withCredentials: true,

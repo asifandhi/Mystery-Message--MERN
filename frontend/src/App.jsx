@@ -1,30 +1,44 @@
-import { useState,useEffect } from 'react'
-import './App.css'
-import { useSelector } from 'react-redux'
-import { toggleTheme } from './store/themeSlice';
-import { Outlet } from 'react-router-dom';
-import { Header,Footer } from '../components';
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser, logout } from './store/authSlice'
+import { getMe } from './api/user.api' 
+import { Header, Footer } from './components'
+import { Outlet } from 'react-router-dom'
 
 function App() {
-  const theme  = useSelector((state) => state.theme.theme);
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, [theme]);
+  const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
+  const theme = useSelector((state) => state.theme.theme)
 
-  return (
-    <div className='min-h-screen flex flex-col bg-white dark:bg-gray-900'>
+  useEffect(() => {
+    const root = document.documentElement
+    if (theme === "dark") root.classList.add("dark")
+    else root.classList.remove("dark")
+  }, [theme])
+
+  useEffect(() => {
+    getMe()
+      .then((res) => dispatch(setUser(res.data.data)))
+      .catch(() => dispatch(logout()))
+      .finally(() => setLoading(false))
+  }, [])
+
+  return !loading ? (
+    <div className='min-h-screen flex flex-col bg-white dark:bg-gray-950'>
       <Header />
-      <main className='flex-1'>
+      <main className='grow'>
         <Outlet />
       </main>
       <Footer />
     </div>
-  )  
+  ) : (
+    <div className='flex items-center justify-center w-full h-screen bg-white dark:bg-gray-950'>
+      <div className='flex flex-col items-center gap-3'>
+        <div className='w-8 h-8 border-2 border-gray-300 dark:border-gray-700 border-t-gray-900 dark:border-t-white rounded-full animate-spin' />
+        <p className='text-sm text-gray-400 dark:text-gray-600'>Loading...</p>
+      </div>
+    </div>
+  )
 }
 
 export default App
