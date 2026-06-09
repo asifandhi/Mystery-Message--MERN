@@ -63,7 +63,7 @@ function Dashboard() {
     const handleCopy = () => {
     navigator.clipboard.writeText(shareLink);
     setCopied(true);
-    setTimeout(() => setCopied(false), 3000);
+    setTimeout(() => setCopied(false), 1000);
   };
 
     if (loading) {
@@ -92,7 +92,8 @@ function Dashboard() {
             </p>
             <button
               onClick={handleCopy}
-              className="text-sm px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors whitespace-nowrap"
+              disabled={copied}
+              className=" bg-transparent  text-sm px-4 py-2 rounded-lg hover:bg-black border border-gray-300 dark:border-gray-700   dark:text-gray-300  dark:hover:bg-white dark:hover:text-black hover:text-white text-black transition-colors whitespace-nowrap"
             >
               {copied ? "Copied!" : "Copy"}
             </button>

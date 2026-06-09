@@ -42,11 +42,13 @@ export default function PublicProfile() {
  
   if (sent) {
     return (
+      
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
         <div className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 flex flex-col items-center gap-4 text-center">
           <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl">
             ✓
           </div>
+           
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Message sent!</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Sent anonymously to <span className="font-medium text-gray-900 dark:text-white">@{username}</span>

@@ -1,3 +1,4 @@
+import { log } from "console";
 import { User } from "../models/user.model.js";
 import { apiError, apiResponse, asyncHandler, sendVerificationEmail } from "../utils/index.js";
 
@@ -42,6 +43,9 @@ export const register = asyncHandler(async (req, res) => {
   console.log("sending  email ");
   
   const emailResponse = await sendVerificationEmail(email, username, verifyCode);
+
+  // console.log("Email Sent: ",verifyCode);
+  
   
   if (!emailResponse.success) throw new apiError(500, emailResponse.message);
 

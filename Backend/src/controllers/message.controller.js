@@ -144,12 +144,11 @@ export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
     throw new apiError(400, "Thread token is required");
   }
 
-  const message = await Message.findOne({ threadToken });
+  const message = await Message.findOne({ threadToken }).populate("user" ,"username");
 
   if (!message) {
     throw new apiError(404, "Thread not found");
   }
-
   // if (message.user && message.user.toString() !== req.user?._id?.toString()) {
   //   throw new apiError(403, "You don't have permission to view this reply");
   // }
@@ -159,7 +158,8 @@ export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
       content: message.content,
       reply: message.reply || null,
       createdAt: message.createdAt,
-      threadToken: message.threadToken
+      threadToken: message.threadToken,
+      username: message.user?.username || null
     }, "Thread fetched successfully")
   );
 });

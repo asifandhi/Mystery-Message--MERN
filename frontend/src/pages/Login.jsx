@@ -32,11 +32,11 @@ function Login() {
 
     }
   return (
-    <div>
-        <div>
-            <div>
-                <h1>Welcome back</h1>
-                <p>Login to your MysteryMsg account</p>
+    <div className='min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4'>
+        <div className='w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8'>
+            <div className='mb-6'>
+                <h1 className='text-2xl font-semibold text-gray-900 dark:text-white'>Welcome back</h1>
+                <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>Login to your MysteryMsg account</p>
             </div>
 
             {serverError && (
@@ -46,7 +46,7 @@ function Login() {
             )}
 
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
+                <div className='flex flex-col gap-1'>
                     <label className="text-sm text-gray-700 dark:text-gray-300">  Email</label>
                     <input
                         type="email"
