@@ -1,16 +1,12 @@
-import { log } from "console";
 import { User } from "../models/user.model.js";
 import { apiError, apiResponse, asyncHandler, sendVerificationEmail } from "../utils/index.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  console.log("Starting the registration ");
-  
 
   if (!username || !email || !password) {
     throw new apiError(400, "All fields are required: username, email, password");
   }
-  console.log("Got the data ");
   
   const isUserExist = await User.findOne({ username, isVerified: true });
   if (isUserExist) throw new apiError(400, "Username is already taken");
@@ -40,12 +36,10 @@ export const register = asyncHandler(async (req, res) => {
       messages: [],
     });
   }
-  console.log("sending  email ");
   
   const emailResponse = await sendVerificationEmail(email, username, verifyCode);
 
-  // console.log("Email Sent: ",verifyCode);
-  
+
   
   if (!emailResponse.success) throw new apiError(500, emailResponse.message);
 
@@ -114,13 +108,11 @@ export const getMe = asyncHandler(async (req, res) => {
 });
 
 export const changeToggleForTheAcceptanceMSG = asyncHandler(async (req, res) => {
-  // ✅ was missing `await` — User.findOne not findById, also wrong method
   const user = await User.findById(req.user._id);
   if (!user) throw new apiError(404, "User not found");
 
   const status = user.isAcceptingMessages;
 
-  // ✅ was calling updateOne wrong — no _id as first arg when using instance
   user.isAcceptingMessages = !status;
   await user.save();
 
@@ -150,7 +142,6 @@ export const deleteAccount = asyncHandler(async (req, res) => {
 
 export const checkUsernameUnique = asyncHandler(async (req, res) => {
   const { username } = req.query;
-  console.log(username);
   
   if (!username) throw new apiError(400, "Username is required");
 
@@ -159,4 +150,11 @@ export const checkUsernameUnique = asyncHandler(async (req, res) => {
   return res.status(200).json(
     new apiResponse(200, { isUnique: !existing }, existing ? "Username is already taken" : "Username is unique")
   );
+});
+
+export const getPublicAcceptStatus = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+  const user = await User.findOne({ username });
+  if (!user) throw new apiError(404, "User not found");
+  return res.status(200).json(new apiResponse(200, { isAcceptingMessages: user.isAcceptingMessages }, "Fetched"));
 });

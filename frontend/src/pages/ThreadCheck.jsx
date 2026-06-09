@@ -83,10 +83,10 @@ export default function ThreadCheck() {
         </p>
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate(-1)}
           className="w-full py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
-          Go Home
+         Back
         </button>
 
       </div>

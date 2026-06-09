@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Link,useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../store/authSlice'
-import { loginUser } from '../api/api'
+import { loginUser,getMe } from '../api/api'
 
 
 
@@ -19,10 +19,12 @@ function Login() {
         setLoading(true)
         try {
             const res = await loginUser(data);
-            dispatch(login(res.data.data.user));
+            const me =  await getMe();
+
+            dispatch(login(me.data.data));
             navigate("/dashboard")
         } catch (err) {
-            setServerError(err.response?.data?.message || "Login failed");
+            setServerError( "Login failed : Try again ");
             
         }
         finally{

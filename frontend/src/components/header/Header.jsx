@@ -23,15 +23,12 @@ function Header() {
     <header className='w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900'>
       <div className='w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
 
-        {/* Main row */}
         <div className='flex items-center justify-between h-16'>
 
-          {/* Logo */}
           <Link to="/" className='text-xl md:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white'>
             MysteryMsg
           </Link>
 
-          {/* Desktop nav */}
           <nav className='hidden sm:flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400'>
             {isAuthenticated && (
               <>
@@ -43,10 +40,8 @@ function Header() {
             )}
           </nav>
 
-          {/* Right side */}
           <div className='flex items-center gap-2'>
 
-            {/* Theme toggle */}
             <button
               onClick={() => dispatch(toggleTheme())}
               className='p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
@@ -63,7 +58,6 @@ function Header() {
               )}
             </button>
 
-            {/* Desktop auth buttons */}
             {isAuthenticated ? (
               <button
                 onClick={handleLogout}
@@ -82,7 +76,6 @@ function Header() {
               </div>
             )}
 
-            {/* Hamburger — mobile only */}
             <button
               className="sm:hidden p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -102,7 +95,6 @@ function Header() {
           </div>
         </div>
 
-        {/* Mobile dropdown */}
         {menuOpen && (
           <div className="sm:hidden border-t border-gray-200 dark:border-gray-800 py-3 flex flex-col gap-1">
             {isAuthenticated ? (

@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard.jsx'
 import PublicProfile from './pages/PublicProfile.jsx'
 import ThreadCheck from './pages/ThreadCheck.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import SentThreads from './pages/SentThreads.jsx'
 
 
 const router = createBrowserRouter([
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: '/thread/:threadToken',
         element: <ThreadCheck />,
+      },
+      { 
+        path: '/threads/:username', 
+        element: <SentThreads /> 
       },
       
     ],

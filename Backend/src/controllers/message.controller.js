@@ -3,7 +3,6 @@ import { apiError, apiResponse, asyncHandler } from "../utils/index.js";
 import mongoose from "mongoose";
 import { randomUUID } from "crypto";
 import { Message } from "../models/message.model.js";
-// POST /api/messages/send/:username  (public)
 export const sendMessage = asyncHandler(async (req, res) => {
   const { username } = req.params;
   const { content } = req.body;
@@ -34,7 +33,6 @@ export const sendMessage = asyncHandler(async (req, res) => {
   );
 });
 
-// GET /api/messages  (protected)
 export const getMessages = asyncHandler(async (req, res) => {
 
   const result = await User.aggregate([
@@ -78,7 +76,6 @@ const messages = result[0]?.messages || [];
   );
 });
 
-// DELETE /api/messages/:messageId  (protected)
 export const deleteMessage = asyncHandler(async (req, res) => {
   const { messageId } = req.params;
   if (!messageId) {
@@ -104,7 +101,6 @@ export const deleteMessage = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, {}, "Message deleted successfully"));
 });
 
-// POST /api/messages/reply/:messageId  (protected)
 export const replyToMessage = asyncHandler(async (req, res) => {
   const { messageId } = req.params;
   const { reply } = req.body;
@@ -149,9 +145,7 @@ export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
   if (!message) {
     throw new apiError(404, "Thread not found");
   }
-  // if (message.user && message.user.toString() !== req.user?._id?.toString()) {
-  //   throw new apiError(403, "You don't have permission to view this reply");
-  // }
+  
 
   return res.status(200).json(
     new apiResponse(200, {

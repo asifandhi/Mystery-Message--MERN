@@ -9,6 +9,7 @@ import {
   getAcceptStatus,
   deleteAccount,
   checkUsernameUnique,
+  getPublicAcceptStatus
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -24,5 +25,6 @@ router.route("/me").get(verifyJWT, getMe);
 router.route("/delete-account").delete(verifyJWT, deleteAccount);
 router.route("/change-toggle").patch(verifyJWT, changeToggleForTheAcceptanceMSG);
 router.route("/accept-status").get(verifyJWT, getAcceptStatus);
+router.get("/accept-status/:username", getPublicAcceptStatus);
 
 export default router;

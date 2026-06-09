@@ -10,7 +10,6 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-// public
 router.route("/send/:username").post(sendMessage);
 router.route("/thread/:threadToken").get(checkMsgReplyThroughThread); 
 

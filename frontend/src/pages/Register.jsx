@@ -30,7 +30,9 @@ export default function Register() {
       await registerUser(data);
       navigate(`/verify-code?username=${data.username}`);
     } catch (err) {
-      setServerError(err.response?.data?.message || "Registration failed");
+      setServerError("Registration failed try different Email ");
+    
+      
     } finally {
       setLoading(false);
     }

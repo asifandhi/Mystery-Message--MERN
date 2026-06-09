@@ -23,7 +23,7 @@ function VerifyCode() {
       await verifyCode({ username, code: data.code });
       navigate("/login");
     } catch (err) {
-      setServerError(err.response?.data?.message || "Verification failed");
+      setServerError( "Verification failed : Make sure you are entering right OTP");
     } finally {
       setLoading(false);
     }

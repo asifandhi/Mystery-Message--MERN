@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import { getMessages } from '../api/api.js'
-import { toggleAcceptStatus,getAcceptStatus } from '../api/api.js'
+import { toggleAcceptStatus,getAcceptStatus, deleteAccount } from '../api/api.js'
 import MessageCard from '../components/MessageCard.jsx'
 
 
@@ -43,7 +43,16 @@ function Dashboard() {
     },[])
     
     
-
+    const handleDelete = async () => {
+  if (!window.confirm("Delete your account? This cannot be undone.")) return;
+  try {
+    await deleteAccount();
+    dispatch(logout());
+    navigate("/");
+  } catch (err) {
+    console.error(err);
+  }
+};
     const handleToggle = async () => {
         setAccepting(true);
         try {
@@ -56,7 +65,7 @@ function Dashboard() {
         }
     };
 
-    const handleDelete = (id) => {
+    const handleDeleteMessage = (id) => {
     setMessages((prev) => prev.filter((m) => m._id !== id));
     };
 
@@ -100,6 +109,7 @@ function Dashboard() {
           </div>
         </div>
 
+        
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Accepting messages</p>
@@ -124,6 +134,16 @@ function Dashboard() {
           </button>
         </div>
 
+        <button
+          onClick={handleDelete}
+          className="bg-white dark:bg-gray-900 border border-red-200 dark:border-red-900 rounded-xl p-4 flex items-center justify-between w-full hover:bg-red-50 dark:hover:bg-red-950 transition-colors "
+        >
+          <div >
+            <p className="text-left text-sm font-medium text-red-600 dark:text-red-400">Delete Account</p>
+            <p className=" text-xs text-gray-400 dark:text-gray-600 mt-0.5">Permanently remove your account</p>
+          </div>
+        </button>
+
         <div className="flex flex-col gap-3">
           <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Messages ({messages?.length})
@@ -134,7 +154,7 @@ function Dashboard() {
             </div>
           ) : (
             messages?.map((msg) => (
-              <MessageCard key={msg._id} message={msg} onDelete={handleDelete} />
+              <MessageCard key={msg._id} message={msg} onDelete={handleDeleteMessage} />
             ))
           )}
         </div>
