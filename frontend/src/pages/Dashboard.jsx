@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import { getMessages } from '../api/api.js'
 import { toggleAcceptStatus,getAcceptStatus, deleteAccount } from '../api/api.js'
 import MessageCard from '../components/MessageCard.jsx'
@@ -9,7 +9,7 @@ import MessageCard from '../components/MessageCard.jsx'
 
 function Dashboard() {
     const { user } = useSelector((state) => state.auth);
-    
+    const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);

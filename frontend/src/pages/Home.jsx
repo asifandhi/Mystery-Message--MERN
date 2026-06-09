@@ -8,7 +8,7 @@ export default function Home() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
       <div className="flex flex-col items-center text-center gap-6 max-w-lg">
 
-        <span className="text-xs px-3 py-1 rounded-full border border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400">
+        <span className="text-xs  px-3 py-1 rounded-full border border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400">
           100% Anonymous
         </span>
 
@@ -44,7 +44,7 @@ export default function Home() {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-4 mt-6 w-full">
+        <div className="grid sm:grid-cols-3 grid-cols-1 gap-4 mt-6 w-full">
           {[
             { step: "1", text: "Create account" },
             { step: "2", text: "Share your link" },
@@ -52,7 +52,7 @@ export default function Home() {
           ].map(({ step, text }) => (
             <div
               key={step}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
+              className="flex flex-col  items-center gap-2 p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
             >
               <span className="text-xs font-medium text-gray-400 dark:text-gray-600">Step {step}</span>
               <p className="text-sm text-gray-700 dark:text-gray-300">{text}</p>

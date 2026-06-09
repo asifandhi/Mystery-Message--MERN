@@ -37,10 +37,10 @@ export default function ThreadCheck() {
         <div className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 text-center flex flex-col gap-4">
           <p className="text-sm text-red-500">{error}</p>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate(-1)}
             className="text-sm px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
-            Go Home
+            Back 
           </button>
         </div>
       </div>
