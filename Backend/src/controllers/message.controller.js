@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import { apiError, apiResponse, asyncHandler } from "../utils/index.js";
 import mongoose from "mongoose";
 import { randomUUID } from "crypto";
-
+import { Message } from "../models/message.model.js";
 // POST /api/messages/send/:username  (public)
 export const sendMessage = asyncHandler(async (req, res) => {
   const { username } = req.params;
@@ -16,7 +16,17 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
   const threadToken = randomUUID();
 
-  user.messages.push({ content, createdAt: new Date(), threadToken });
+  const message = await Message.create({
+    content,
+    createdAt: new Date(),
+    threadToken,
+    user: user._id
+
+  })
+
+
+
+  user.messages.push(message._id);
   await user.save();
 
   return res.status(201).json(
@@ -26,36 +36,72 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
 // GET /api/messages  (protected)
 export const getMessages = asyncHandler(async (req, res) => {
-  const userId = { $match: { _id: req.user._id } }
 
   const result = await User.aggregate([
-    { $match: { _id: userId } },
-    { $unwind: "$messages" },
-    { $sort: { "messages.createdAt": -1 } },
-    { $group: { _id: "$_id", messages: { $push: "$messages" } } },
+    {
+       $match: { _id: req.user._id }
+    },
+    {
+      $lookup: {
+        from: "messages",           
+        localField: "messages",
+        foreignField: "_id",
+        as: "messages",
+        pipeline: [
+          { $match: { user: req.user._id } }    
+        ]
+      }
+    },
+    { 
+      $unwind: { 
+        path: "$messages", 
+        preserveNullAndEmptyArrays: true 
+      }
+    },
+    { 
+      $sort: { "messages.createdAt": -1 } 
+    },
+    { 
+      $group: { _id: "$_id", messages: { $push: "$messages" } } 
+    },
+    {
+      $project: {
+        _id: 0,
+        messages: 1
+      }
+    }
   ]);
 
-  if (!result || result.length === 0) throw new apiError(404, "No messages found");
-
+const messages = result[0]?.messages || [];
   return res.status(200).json(
-    new apiResponse(200, { messages: result[0].messages }, "Messages fetched")
+    new apiResponse(200, { messages }, "Messages fetched")
   );
 });
 
 // DELETE /api/messages/:messageId  (protected)
 export const deleteMessage = asyncHandler(async (req, res) => {
   const { messageId } = req.params;
-
-  const updateResult = await User.updateOne(
-    { _id: req.user._id },
-    { $pull: { messages: { _id: messageId } } }
-  );
-
-  if (updateResult.modifiedCount === 0) {
-    throw new apiError(404, "Message not found or already deleted");
+  if (!messageId) {
+    throw new apiError(400, "Message ID is required");
   }
 
-  return res.status(200).json(new apiResponse(200, {}, "Message deleted"));
+  const deletedMessage = await Message.findOneAndDelete({
+    _id: messageId,
+    user: req.user._id
+
+  });
+
+  if (!deletedMessage) {
+    throw new apiError(404, "Message not found or you don't have permission");
+  }
+  await User.updateOne(
+    { _id: req.user._id },
+    { $pull: { messages: messageId } }
+  );
+
+  
+
+  return res.status(200).json(new apiResponse(200, {}, "Message deleted successfully"));
 });
 
 // POST /api/messages/reply/:messageId  (protected)
@@ -63,37 +109,57 @@ export const replyToMessage = asyncHandler(async (req, res) => {
   const { messageId } = req.params;
   const { reply } = req.body;
 
-  if (!reply) throw new apiError(400, "Reply content is required");
+  if (!reply) {
+    throw new apiError(400, "Reply content is required");
+  }
 
-  const user = await User.findOne({
-    _id: req.user._id,
-    "messages._id": messageId,
+  if (!messageId) {
+    throw new apiError(400, "Message ID is required");
+  }
+
+  const message = await Message.findOne({
+    _id: messageId,
+    user: req.user._id        
   });
-  if (!user) throw new apiError(404, "Message not found");
 
-  const message = user.messages.id(messageId);
-  if (message.reply) throw new apiError(400, "Already replied to this message");
+  if (!message) {
+    throw new apiError(404, "Message not found or you don't have permission");
+  }
 
+  if (message.reply !== null) {
+    throw new apiError(400, "Already replied to this message");
+  }
   message.reply = reply;
-  await user.save();
+  await message.save();
 
-  return res.status(200).json(new apiResponse(200, {}, "Reply sent"));
+  return res.status(200).json(
+    new apiResponse(200, { reply }, "Reply sent successfully")
+  );
 });
 
-// GET /api/messages/thread/:threadToken  (public — sender uses this)
 export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
   const { threadToken } = req.params;
 
-  const user = await User.findOne({ "messages.threadToken": threadToken });
-  if (!user) throw new apiError(404, "Thread not found");
+  if (!threadToken) {
+    throw new apiError(400, "Thread token is required");
+  }
 
-  const message = user.messages.find((m) => m.threadToken === threadToken);
+  const message = await Message.findOne({ threadToken });
+
+  if (!message) {
+    throw new apiError(404, "Thread not found");
+  }
+
+  // if (message.user && message.user.toString() !== req.user?._id?.toString()) {
+  //   throw new apiError(403, "You don't have permission to view this reply");
+  // }
 
   return res.status(200).json(
     new apiResponse(200, {
       content: message.content,
       reply: message.reply || null,
       createdAt: message.createdAt,
-    }, "Thread fetched")
+      threadToken: message.threadToken
+    }, "Thread fetched successfully")
   );
 });

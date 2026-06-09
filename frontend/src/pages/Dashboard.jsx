@@ -1,14 +1,15 @@
 import React,{useState,useEffect} from 'react'
 import { useSelector } from 'react-redux'
-import { getMessages,deleteMessage } from '../api/message.api'
-import { toggleAcceptStatus,getAcceptStatus } from '../api/user.api'
-import MessageCard from '../components/MessageCard'
+import { getMessages } from '../api/api.js'
+import { toggleAcceptStatus,getAcceptStatus } from '../api/api.js'
+import MessageCard from '../components/MessageCard.jsx'
 
 
 
 
 function Dashboard() {
     const { user } = useSelector((state) => state.auth);
+    
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
@@ -25,10 +26,12 @@ function Dashboard() {
                     getMessages(),
                     getAcceptStatus()
                 ]);
+                
+                
 
-                setMessages(msgRes.data.data);
+                setMessages(msgRes.data.data.messages);
                 setIsAccepting(statusRes.data.data.isAcceptingMessages)
-            } catch (error) {
+            } catch (err) {
                 console.error(err);
                 
             }
@@ -37,7 +40,9 @@ function Dashboard() {
             }
         };
         fetchData();
-    })
+    },[])
+    
+    
 
     const handleToggle = async () => {
         setAccepting(true);
@@ -120,14 +125,14 @@ function Dashboard() {
 
         <div className="flex flex-col gap-3">
           <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Messages ({messages.length})
+            Messages ({messages?.length})
           </p>
-          {messages.length === 0 ? (
+          {messages?.length === 0 ? (
             <div className="text-center py-12 text-sm text-gray-400 dark:text-gray-600 border border-dashed border-gray-200 dark:border-gray-800 rounded-xl">
               No messages yet. Share your link to get started.
             </div>
           ) : (
-            messages.map((msg) => (
+            messages?.map((msg) => (
               <MessageCard key={msg._id} message={msg} onDelete={handleDelete} />
             ))
           )}

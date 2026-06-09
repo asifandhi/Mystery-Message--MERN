@@ -3,12 +3,14 @@ import { apiError, apiResponse, asyncHandler, sendVerificationEmail } from "../u
 
 export const register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
+  console.log("Starting the registration ");
+  
 
-  // ✅ was checking `name` which doesn't exist in destructuring
   if (!username || !email || !password) {
     throw new apiError(400, "All fields are required: username, email, password");
   }
-
+  console.log("Got the data ");
+  
   const isUserExist = await User.findOne({ username, isVerified: true });
   if (isUserExist) throw new apiError(400, "Username is already taken");
 
@@ -17,7 +19,6 @@ export const register = asyncHandler(async (req, res) => {
 
   const isEmailExist = await User.findOne({ email });
 
-  // ✅ moved newUser declaration outside if/else so it's accessible below
   let newUser;
 
   if (isEmailExist) {
@@ -38,13 +39,14 @@ export const register = asyncHandler(async (req, res) => {
       messages: [],
     });
   }
-
+  console.log("sending  email ");
+  
   const emailResponse = await sendVerificationEmail(email, username, verifyCode);
+  
   if (!emailResponse.success) throw new apiError(500, emailResponse.message);
 
   return res.status(201).json(
     new apiResponse(201, {}, "User registered. Please verify your account.")
-    // ✅ removed newUser from response — never send password/verifyCode to client
   );
 });
 
@@ -144,6 +146,8 @@ export const deleteAccount = asyncHandler(async (req, res) => {
 
 export const checkUsernameUnique = asyncHandler(async (req, res) => {
   const { username } = req.query;
+  console.log(username);
+  
   if (!username) throw new apiError(400, "Username is required");
 
   const existing = await User.findOne({ username, isVerified: true });

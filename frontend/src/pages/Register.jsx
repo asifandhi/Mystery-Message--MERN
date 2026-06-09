@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { registerUser,checkUsername } from "../api/user.api";
+import { registerUser,checkUsername } from "../api/api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -16,7 +16,8 @@ export default function Register() {
     if (!username || username.length < 3) return;
     try {
       const res = await checkUsername(username);
-      setUsernameMsg(res.data.data.available ? "✓ Available" : "✗ Already taken");
+      setUsernameMsg(res.data.data.isUnique ? "✓ Available" : "✗ Already taken");
+      
     } catch {
       setUsernameMsg("");
     }

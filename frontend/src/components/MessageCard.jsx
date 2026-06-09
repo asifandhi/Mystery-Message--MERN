@@ -1,7 +1,5 @@
 import React,{useState} from 'react'
-import { deleteMessage,replyToMessage } from '../api/message.api'
-import { send } from 'vite';
-
+import { deleteMessage,replyToMessage } from '../api/api.js';
 
 function MessageCard({ message, onDelete }) {
 
@@ -28,7 +26,7 @@ function MessageCard({ message, onDelete }) {
   return (
     <div>
         <p>{message.content}</p>
-        <span>{new Date(message.createdAt).toLocaleDateString}</span>
+        <span>{new Date(message.createdAt).toLocaleDateString()}</span>
         {localReply ? (
             <div>
                 <p>Your reply</p>

@@ -10,6 +10,7 @@ export const sendVerificationEmail = async (email,username,verifyCode)=>{
             subject: "Mystery Message – Verify your account",
             html:verificationEmailHTML(username,verifyCode)
         });
+        return { success: true, message: "Verification email sent successfully." };
     } catch (error) {
         console.error("Email send error:", error);
     return { success: false, message: "Failed to send verification email." };

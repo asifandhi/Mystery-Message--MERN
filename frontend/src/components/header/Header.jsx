@@ -4,6 +4,7 @@ import { toggleTheme } from '../../store/themeSlice'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import api from '../../api/axios'
+import { logoutUser } from '../../api/api'
 
 function Header() {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    await api.post("/users/logout");
+    await logoutUser();
     dispatch(logout());
     navigate("/login");
   }

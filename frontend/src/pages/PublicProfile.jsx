@@ -1,6 +1,6 @@
 import react,{ useState } from "react";
 import { useParams } from "react-router-dom";
-import { sendMessage } from "../api/message.api";
+import { sendMessage } from "../api/api";
 
 export default function PublicProfile() {
   const { username } = useParams();
@@ -53,9 +53,10 @@ export default function PublicProfile() {
           </p>
 
            
+           <a
             href={`/thread/${threadToken}`}
             className="w-full py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-center"
-          <a>
+          >
             Check reply later
           </a>
 

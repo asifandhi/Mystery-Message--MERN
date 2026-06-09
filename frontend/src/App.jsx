@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { login, logout } from './store/authSlice'
-import { getMe } from './api/user.api.js' 
+import { getMe } from './api/api.js' 
 import Header from './components/header/Header.jsx'
 import Footer from './components/footer/Footer.jsx'
 import { Outlet } from 'react-router-dom'

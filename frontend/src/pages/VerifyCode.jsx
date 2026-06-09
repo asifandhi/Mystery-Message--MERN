@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate,useSearchParams } from 'react-router-dom'
-import { verifyCode } from '../api/user.api'
+import { verifyCode } from '../api/api'
 
 
 

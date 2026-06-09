@@ -8,7 +8,7 @@ const messageSchema = new Schema({
   createdAt: {
     type: Date,
     required: true,
-    default: Date.now,
+    default: Date.now(),
   },
    reply: {
     type: String,
@@ -17,7 +17,13 @@ const messageSchema = new Schema({
   threadToken: {
     type: String,
     unique: true,
-    sparse: true,}
+    sparse: true,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  }
 })
 
 export const  Message = mongoose.model("Message",messageSchema);

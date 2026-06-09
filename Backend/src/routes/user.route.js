@@ -19,7 +19,7 @@ router.route("/verify-code").post(verifyCode);
 router.route("/login").post(login);
 router.route("/check-username").get(checkUsernameUnique);
 
-router.route("/logout").post(verifyJWT, logout);
+router.route("/logout").get(verifyJWT, logout);
 router.route("/me").get(verifyJWT, getMe);
 router.route("/delete-account").delete(verifyJWT, deleteAccount);
 router.route("/change-toggle").patch(verifyJWT, changeToggleForTheAcceptanceMSG);

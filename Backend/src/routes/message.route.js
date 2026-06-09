@@ -12,9 +12,9 @@ const router = Router();
 
 // public
 router.route("/send/:username").post(sendMessage);
-router.route("/thread/:threadToken").get(checkMsgReplyThroughThread); // ✅ POST because body
+router.route("/thread/:threadToken").get(checkMsgReplyThroughThread); 
 
-// protected
+
 router.route("/").get(verifyJWT, getMessages);
 router.route("/:messageId").delete(verifyJWT, deleteMessage);
 router.route("/reply/:messageId").post(verifyJWT, replyToMessage);

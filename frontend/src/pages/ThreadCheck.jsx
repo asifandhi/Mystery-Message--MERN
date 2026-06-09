@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { checkThread } from "../api/message.api";
+import { checkThread } from "../api/api";
 
 export default function ThreadCheck() {
   const { threadToken } = useParams();
