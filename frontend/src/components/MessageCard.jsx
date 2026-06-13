@@ -44,7 +44,7 @@ function MessageCard({ message, onDelete }) {
                     className='w-full text-sm px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-100 resize-none focus:outline-none focus:ring-1 focus:ring-gray-400'
 
                     />
-                    <div>
+                    <div className='flex gap-3'>
                         <button
                         disabled={loading}
                         onClick={handleReply}

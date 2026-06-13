@@ -34,6 +34,7 @@ function VerifyCode() {
       <div className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8">
 
         <div className="mb-6">
+          <p className="text-xs text-gray-400">Check spam folder if you don't see it.</p>
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Verify your email</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Enter the OTP sent to your email
