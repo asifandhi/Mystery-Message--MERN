@@ -9,17 +9,26 @@ function MessageCard({ message, onDelete }) {
     const [localReply, setLocalReply] = useState(message.reply || null);
 
      const handleDelete = async () => {
-    await deleteMessage(message._id);
-    onDelete(message._id);
+    try {
+      await deleteMessage(message._id);
+      onDelete(message._id);
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete message");
+    }
   };
 
   const handleReply = async () => {
     if (!replyText.trim()) return;
     setLoading(true);
-    await replyToMessage(message._id, { reply: replyText });
-    setLocalReply(replyText);
-    setShowReplyBox(false);
-    setLoading(false);
+    try {
+      await replyToMessage(message._id, { reply: replyText });
+      setLocalReply(replyText);
+      setShowReplyBox(false);
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to send reply");
+    } finally {
+      setLoading(false);
+    }
   };
 
 

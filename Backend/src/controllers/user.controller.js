@@ -86,11 +86,11 @@ export const login = asyncHandler(async (req, res) => {
     throw new apiError(400, "Email and password are required");
 
   const user = await User.findOne({ email });
-  if (!user) throw new apiError(404, "User not found");
+  if (!user) throw new apiError(404, "User not found or invalid credentials");
   if (!user.isVerified) throw new apiError(403, "Account not verified");
 
   const isPasswordCorrect = await user.isPasswordCorrect(password);
-  if (!isPasswordCorrect) throw new apiError(401, "Invalid credentials");
+  if (!isPasswordCorrect) throw new apiError(401, "User not found or invalid credentials");
 
   const accessToken = user.generateAccessToken();
   const refreshToken = user.generateRefreshToken();

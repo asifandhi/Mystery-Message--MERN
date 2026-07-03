@@ -24,7 +24,7 @@ function Login() {
             dispatch(login(me.data.data));
             navigate("/dashboard")
         } catch (err) {
-            setServerError( "Login failed : Try again ");
+            setServerError(err.response?.data?.message || "Login failed. Please try again.");
             
         }
         finally{
@@ -57,8 +57,8 @@ function Login() {
                         {...register("email", { required: "email is  required",
                             pattern:{ value: /^\S+@\S+\.\S+$/, message: "Invalid email" } },)}
                     />
-                    {errors.identifier && (
-                        <p className="text-xs text-red-500">{errors.identifier.message}</p>
+                    {errors.email && (
+                        <p className="text-xs text-red-500">{errors.email.message}</p>
                     )}
                 </div>
                 <div className="flex flex-col gap-1">

@@ -34,8 +34,7 @@ function Dashboard() {
                 setMessages(msgRes.data.data.messages);
                 setIsAccepting(statusRes.data.data.isAcceptingMessages)
             } catch (err) {
-                console.error(err);
-                
+                alert(err.response?.data?.message || "Failed to load dashboard data");
             }
             finally{
                 setLoading(false);
@@ -52,7 +51,7 @@ function Dashboard() {
     dispatch(logout());
     navigate("/");
   } catch (err) {
-    console.error(err);
+    alert(err.response?.data?.message || "Failed to delete account");
   }
 };
     const handleToggle = async () => {
@@ -61,7 +60,7 @@ function Dashboard() {
         const res = await toggleAcceptStatus();
         setIsAccepting(res.data.data.isAcceptingMessages);
         } catch (err) {
-        console.error(err);
+        alert(err.response?.data?.message || "Failed to update status");
         } finally {
         setAccepting(false);
         }
