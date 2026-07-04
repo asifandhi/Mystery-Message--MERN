@@ -1,11 +1,17 @@
 import nodemailer from "nodemailer"
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, 
+    pass: process.env.EMAIL_PASS?.trim(), // trimming spaces just in case
   },
+  // Helps bypass some cloud provider connection issues
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 const BRAND_PRIMARY = "#1a56db";
@@ -85,12 +91,16 @@ export async function sendOTPEmail({ to, otp }) {
     </p>
   `;
 
-  const info = await transporter.sendMail({
-    from: `"MysteryMsg" <${process.env.EMAIL_USER}>`,
-    to,
-    subject: `Your MysteryMsg verification code: ${otp}`,
-    html: emailShell('OTP Verification – MysteryMsg', bodyHtml),
-  });
-
-  return info;
+  try {
+    const info = await transporter.sendMail({
+      from: `"MysteryMsg" <${process.env.EMAIL_USER}>`,
+      to,
+      subject: `Your MysteryMsg verification code: ${otp}`,
+      html: emailShell('OTP Verification – MysteryMsg', bodyHtml),
+    });
+    return info;
+  } catch (err) {
+    console.error("Nodemailer Error:", err);
+    throw err;
+  }
 }
