@@ -77,6 +77,7 @@ export const verifyCode = asyncHandler(async (req, res) => {
 const options = {
   httpOnly: true,
   secure: true,
+  sameSite: "none",
 };
 
 export const login = asyncHandler(async (req, res) => {
