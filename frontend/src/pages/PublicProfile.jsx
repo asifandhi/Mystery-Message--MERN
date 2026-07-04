@@ -2,15 +2,15 @@ import react,{ useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { sendMessage } from "../api/api";
 import { useNavigate } from "react-router-dom";
-
 import { getPublicAcceptStatus } from "../api/api";
+import { useToast } from "../components/toast/ToastContext";
 
 export default function PublicProfile() {
   const { username } = useParams();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [threadToken, setThreadToken] = useState(null);
   const [sent, setSent] = useState(false);
   const [acceptStatus,setAcceptStatus] = useState(true)
@@ -18,7 +18,6 @@ export default function PublicProfile() {
   const handleSend = async () => {
     if (!content.trim()) return;
     setLoading(true);
-    setError("");
     try {
       const res = await sendMessage(username, { content });
       const token = res.data.data.threadToken;
@@ -38,9 +37,10 @@ export default function PublicProfile() {
       setThreadToken(token);
       setContent("")
       setSent(true);
+      showToast("Message sent successfully!", "success");
 
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to send message");
+      showToast(err.response?.data?.message || "Failed to send message", "error");
     } finally {
       setLoading(false);
     }
@@ -51,7 +51,7 @@ export default function PublicProfile() {
     .then((res) => {
       setAcceptStatus(res.data.data.isAcceptingMessages) 
     })
-    .catch(() => setError("User not found"))
+    .catch(() => showToast("User not found", "error"))
 }, [username])
 
  
@@ -88,12 +88,6 @@ export default function PublicProfile() {
           </p>
           
         </div>
-
-        {error && (
-          <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-lg px-3 py-2">
-            {error}
-          </p>
-        )}
 
 
         {sent && (

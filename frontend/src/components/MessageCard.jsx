@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import { deleteMessage,replyToMessage } from '../api/api.js';
+import { useToast } from './toast/ToastContext.jsx';
 
 function MessageCard({ message, onDelete }) {
 
@@ -7,13 +8,15 @@ function MessageCard({ message, onDelete }) {
     const [showReplyBox, setShowReplyBox] = useState(false);
     const [loading, setLoading] = useState(false);
     const [localReply, setLocalReply] = useState(message.reply || null);
+    const { showToast } = useToast();
 
      const handleDelete = async () => {
     try {
       await deleteMessage(message._id);
       onDelete(message._id);
+      showToast("Message deleted", "success");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete message");
+      showToast(err.response?.data?.message || "Failed to delete message", "error");
     }
   };
 
@@ -24,8 +27,9 @@ function MessageCard({ message, onDelete }) {
       await replyToMessage(message._id, { reply: replyText });
       setLocalReply(replyText);
       setShowReplyBox(false);
+      showToast("Reply sent!", "success");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to send reply");
+      showToast(err.response?.data?.message || "Failed to send reply", "error");
     } finally {
       setLoading(false);
     }

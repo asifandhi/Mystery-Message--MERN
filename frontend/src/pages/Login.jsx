@@ -4,27 +4,28 @@ import { Link,useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../store/authSlice'
 import { loginUser,getMe } from '../api/api'
+import { useToast } from '../components/toast/ToastContext'
 
 
 
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [serverError, setServerError] = useState("");
+    const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
     const {register,handleSubmit,formState:{errors}} = useForm();
 
     const onSubmit = async (data)=>{
-        setServerError("");
         setLoading(true)
         try {
             const res = await loginUser(data);
             const me =  await getMe();
 
             dispatch(login(me.data.data));
+            showToast("Login successful!", "success");
             navigate("/dashboard")
         } catch (err) {
-            setServerError(err.response?.data?.message || "Login failed. Please try again.");
+            showToast(err.response?.data?.message || "Login failed. Please try again.", "error");
             
         }
         finally{
@@ -40,12 +41,6 @@ function Login() {
                 <h1 className='text-2xl font-semibold text-gray-900 dark:text-white'>Welcome back</h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>Login to your MysteryMsg account</p>
             </div>
-
-            {serverError && (
-                <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-lg px-3 py-2 mb-4">
-                     {serverError}
-                </p>
-            )}
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className='flex flex-col gap-1'>

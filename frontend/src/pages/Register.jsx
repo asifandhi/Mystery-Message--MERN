@@ -2,10 +2,11 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser,checkUsername } from "../api/api";
+import { useToast } from "../components/toast/ToastContext";
 
 export default function Register() {
   const navigate = useNavigate();
-  const [serverError, setServerError] = useState("");
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [usernameMsg, setUsernameMsg] = useState("");
 
@@ -24,13 +25,13 @@ export default function Register() {
   };
 
   const onSubmit = async (data) => {
-    setServerError("");
     setLoading(true);
     try {
       await registerUser(data);
+      showToast("Account created! Please verify your email.", "success");
       navigate(`/verify-code?username=${data.username}`);
     } catch (err) {
-      setServerError(err.response?.data?.message || "Registration failed. Please try again.");
+      showToast(err.response?.data?.message || "Registration failed. Please try again.", "error");
     
       
     } finally {
@@ -46,12 +47,6 @@ export default function Register() {
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Create account</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Start receiving anonymous messages</p>
         </div>
-
-        {serverError && (
-          <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-900 rounded-lg px-3 py-2 mb-4">
-            {serverError}
-          </p>
-        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 

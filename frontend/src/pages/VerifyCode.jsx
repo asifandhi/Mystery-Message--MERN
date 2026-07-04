@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate,useSearchParams } from 'react-router-dom'
 import { verifyCode } from '../api/api'
+import { useToast } from '../components/toast/ToastContext'
 
 
 
@@ -11,19 +12,19 @@ function VerifyCode() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const username = searchParams.get("username");
-    const [serverError, setServerError] = useState("");
+    const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
 
     const {register,handleSubmit,formState: { errors },} = useForm();
 
     const onSubmit = async (data) => {
-    setServerError("");
     setLoading(true);
     try {
       await verifyCode({ username, code: data.code });
+      showToast("Account verified successfully!", "success");
       navigate("/login");
     } catch (err) {
-      setServerError(err.response?.data?.message || "Verification failed. Please try again.");
+      showToast(err.response?.data?.message || "Verification failed. Please try again.", "error");
     } finally {
       setLoading(false);
     }
@@ -43,12 +44,6 @@ function VerifyCode() {
             )}
           </p>
         </div>
-
-        {serverError && (
-          <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-lg px-3 py-2 mb-4">
-            {serverError}
-          </p>
-        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 

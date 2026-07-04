@@ -15,6 +15,7 @@ import PublicProfile from './pages/PublicProfile.jsx'
 import ThreadCheck from './pages/ThreadCheck.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import SentThreads from './pages/SentThreads.jsx'
+import { ToastProvider } from './components/toast/ToastContext.jsx'
 
 
 const router = createBrowserRouter([
@@ -78,7 +79,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <ToastProvider>
+        <RouterProvider router={router} />
+      </ToastProvider>
     </Provider>
   </StrictMode>
 )

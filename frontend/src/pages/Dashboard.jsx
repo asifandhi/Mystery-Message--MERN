@@ -4,6 +4,7 @@ import { getMessages } from '../api/api.js'
 import { toggleAcceptStatus,getAcceptStatus, deleteAccount } from '../api/api.js'
 import MessageCard from '../components/MessageCard.jsx'
 import { useNavigate } from 'react-router-dom'
+import { useToast } from '../components/toast/ToastContext.jsx'
 
 
 
@@ -12,6 +13,7 @@ function Dashboard() {
     const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { showToast } = useToast();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
@@ -29,12 +31,11 @@ function Dashboard() {
                     getAcceptStatus()
                 ]);
                 
-                
 
                 setMessages(msgRes.data.data.messages);
                 setIsAccepting(statusRes.data.data.isAcceptingMessages)
             } catch (err) {
-                alert(err.response?.data?.message || "Failed to load dashboard data");
+                showToast(err.response?.data?.message || "Failed to load dashboard data", "error");
             }
             finally{
                 setLoading(false);
@@ -51,7 +52,7 @@ function Dashboard() {
     dispatch(logout());
     navigate("/");
   } catch (err) {
-    alert(err.response?.data?.message || "Failed to delete account");
+    showToast(err.response?.data?.message || "Failed to delete account", "error");
   }
 };
     const handleToggle = async () => {
@@ -59,8 +60,14 @@ function Dashboard() {
         try {
         const res = await toggleAcceptStatus();
         setIsAccepting(res.data.data.isAcceptingMessages);
+        showToast(
+          res.data.data.isAcceptingMessages
+            ? "Now accepting messages"
+            : "Stopped accepting messages",
+          "success"
+        );
         } catch (err) {
-        alert(err.response?.data?.message || "Failed to update status");
+        showToast(err.response?.data?.message || "Failed to update status", "error");
         } finally {
         setAccepting(false);
         }
@@ -73,6 +80,7 @@ function Dashboard() {
     const handleCopy = () => {
     navigator.clipboard.writeText(shareLink);
     setCopied(true);
+    showToast("Link copied to clipboard!", "success");
     setTimeout(() => setCopied(false), 1000);
   };
 
