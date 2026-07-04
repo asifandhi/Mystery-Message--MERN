@@ -24,6 +24,9 @@ app.use("/api/v1/messages", messageRouter);
 
 // Global error handler — catches all apiError throws and sends JSON
 app.use((err, req, res, next) => {
+    // Log the error so you can see it in Render logs
+    console.error("SERVER ERROR:", err);
+
     const statusCode = err.statusCode || 500;
     const message = err.message || "Something went wrong";
 
