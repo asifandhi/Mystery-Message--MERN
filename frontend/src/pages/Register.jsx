@@ -28,8 +28,8 @@ export default function Register() {
     setLoading(true);
     try {
       await registerUser(data);
-      showToast("Account created! Please verify your email.", "success");
-      navigate(`/verify-code?username=${data.username}`);
+      showToast("Account created successfully!", "success");
+      navigate("/login");
     } catch (err) {
       showToast(err.response?.data?.message || "Registration failed. Please try again.", "error");
     

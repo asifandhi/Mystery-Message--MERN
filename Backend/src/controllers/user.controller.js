@@ -4,7 +4,7 @@ import {
   apiResponse,
   asyncHandler,
 } from "../utils/index.js";
-import { sendOTPEmail } from "../utils/email.util.js";
+
 export const register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -15,64 +15,28 @@ export const register = asyncHandler(async (req, res) => {
     );
   }
 
-  const isUserExist = await User.findOne({ username, isVerified: true });
+  const isUserExist = await User.findOne({ username });
   if (isUserExist) throw new apiError(400, "Username is already taken");
 
-  const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
-  const verifyCodeExpiry = new Date(Date.now() + 3600000 / 2);
-
   const isEmailExist = await User.findOne({ email });
+  if (isEmailExist) throw new apiError(400, "User already exists with this email");
 
-  let newUser;
+  const newUser = await User.create({
+    username,
+    email,
+    password,
+    isAcceptingMessages: true,
+    messages: [],
+  });
 
-  if (isEmailExist) {
-    if (isEmailExist.isVerified)
-      throw new apiError(400, "User already exists with this email");
-    isEmailExist.password = password;
-    isEmailExist.verifyCode = verifyCode;
-    isEmailExist.verifyCodeExpiry = verifyCodeExpiry;
-    newUser = await isEmailExist.save();
-  } else {
-    newUser = await User.create({
-      username,
-      email,
-      password,
-      verifyCode,
-      verifyCodeExpiry,
-      isVerified: false,
-      isAcceptingMessages: true,
-      messages: [],
-    });
-  }
-
-  await sendOTPEmail({ to: email, otp: verifyCode });
   return res
     .status(201)
     .json(
-      new apiResponse(201, {}, "User registered. Please verify your account.")
+      new apiResponse(201, {}, "User registered successfully.")
     );
 });
 
-export const verifyCode = asyncHandler(async (req, res) => {
-  const { username, code } = req.body;
 
-  const user = await User.findOne({ username });
-  if (!user) throw new apiError(404, "User not found");
-
-  const isCodeValid = user.verifyCode === code;
-  const isNotExpired = new Date(user.verifyCodeExpiry) > new Date();
-
-  if (!isNotExpired)
-    throw new apiError(400, "Verification code expired. Please sign up again.");
-  if (!isCodeValid) throw new apiError(400, "Incorrect verification code");
-
-  user.isVerified = true;
-  await user.save();
-
-  return res
-    .status(200)
-    .json(new apiResponse(200, {}, "Account verified successfully"));
-});
 
 const options = {
   httpOnly: true,
@@ -88,7 +52,6 @@ export const login = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
   if (!user) throw new apiError(404, "User not found or invalid credentials");
-  if (!user.isVerified) throw new apiError(403, "Account not verified");
 
   const isPasswordCorrect = await user.isPasswordCorrect(password);
   if (!isPasswordCorrect) throw new apiError(401, "User not found or invalid credentials");
@@ -177,7 +140,7 @@ export const checkUsernameUnique = asyncHandler(async (req, res) => {
 
   if (!username) throw new apiError(400, "Username is required");
 
-  const existing = await User.findOne({ username, isVerified: true });
+  const existing = await User.findOne({ username });
 
   return res
     .status(200)

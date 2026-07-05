@@ -2,7 +2,6 @@ import api from "./axios";
 
 export const registerUser = (data) => api.post("/users/register", data);
 
-export const verifyCode = (data) => api.post("/users/verify-code", data);
 
 export const loginUser = (data) => api.post("/users/login", data);
 

@@ -9,7 +9,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
-import VerifyCode from './pages/VerifyCode.jsx'
+
 import Dashboard from './pages/Dashboard.jsx'
 import PublicProfile from './pages/PublicProfile.jsx'
 import ThreadCheck from './pages/ThreadCheck.jsx'
@@ -43,14 +43,7 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: '/verify-code',
-        element: (
-          <ProtectedRoute authentication={false}>
-            <VerifyCode />
-          </ProtectedRoute>
-        ),
-      },
+
       {
         path: '/dashboard',
         element: (
