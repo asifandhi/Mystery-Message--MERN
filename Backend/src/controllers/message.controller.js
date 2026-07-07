@@ -133,7 +133,7 @@ export const replyToMessage = asyncHandler(async (req, res) => {
   );
 });
 
-export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
+export const markAsSeen = asyncHandler(async (req, res) => {
   const { threadToken } = req.params;
 
   if (!threadToken) {
@@ -145,7 +145,26 @@ export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
   if (!message) {
     throw new apiError(404, "Thread not found");
   }
+  message.seen = true;
+  await message.save();
   
+
+  return res.status(200).json(
+    new apiResponse(200, {}, "Check seen successfully")
+  );
+});
+export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
+  const { threadToken } = req.params;
+
+  if (!threadToken) {
+    throw new apiError(400, "Thread token is required");
+  }
+
+  const message = await Message.findOne({ threadToken }).populate("user" ,"username");
+
+  if (!message) {
+    throw new apiError(404, "Thread not found");
+  } 
 
   return res.status(200).json(
     new apiResponse(200, {
@@ -153,7 +172,8 @@ export const checkMsgReplyThroughThread = asyncHandler(async (req, res) => {
       reply: message.reply || null,
       createdAt: message.createdAt,
       threadToken: message.threadToken,
-      username: message.user?.username || null
+      username: message.user?.username || null,
+      seenStatus : message.seen
     }, "Thread fetched successfully")
   );
 });

@@ -29,4 +29,6 @@ export const replyToMessage = (messageId, data) => api.post(`/messages/reply/${m
 
 export const checkThread = (threadToken) => api.get(`/messages/thread/${threadToken}`);
 
+export const markAsSeen = (threadToken) => api.patch(`/messages/thread/${threadToken}/seen`);
+
 export const getPublicAcceptStatus = (username) => api.get(`/users/accept-status/${username}`);

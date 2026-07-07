@@ -19,6 +19,12 @@ const messageSchema = new Schema({
     unique: true,
     sparse: true,
   },
+  seen:{
+    type:Boolean,
+    default:false    
+  },
+  
+
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
